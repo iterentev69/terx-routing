@@ -25,22 +25,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Update GeoIP and GeoSite references
+      - name: Update INCY GeoIP and GeoSite references
         run: python scripts/update_geo.py
 
       - name: Validate routing JSON
-        run: python -m json.tool HAPP/DEFAULT.JSON > /dev/null
+        run: |
+          python -m json.tool HAPP/DEFAULT.JSON > /dev/null
+          python -m json.tool INCY/DEFAULT.JSON > /dev/null
 
       - name: Commit changes
         shell: bash
         run: |
-          if git diff --quiet -- HAPP/DEFAULT.JSON; then
+          if git diff --quiet -- INCY/DEFAULT.JSON; then
             echo "No upstream changes"
             exit 0
           fi
 
           git config user.name "TerX Routing Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add HAPP/DEFAULT.JSON
-          git commit -m "chore: update GeoIP and GeoSite releases"
+          git add INCY/DEFAULT.JSON
+          git commit -m "chore: update INCY GeoIP and GeoSite releases"
           git push

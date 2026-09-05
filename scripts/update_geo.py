@@ -32,8 +32,6 @@ def write_pretty_json(path: Path, data: dict) -> None:
 
 
 def build_happ_deeplink(config: dict) -> str:
-    # Happ is sensitive to the serialized payload. Keep this identical to
-    # RoscomVPN's compact JSON form before base64 encoding.
     compact = json.dumps(config, ensure_ascii=False, separators=(",", ":"))
     payload = base64.b64encode(compact.encode("utf-8")).decode("ascii")
     return f"happ://routing/onadd/{payload}\n"
@@ -63,8 +61,9 @@ def sync_happ() -> bool:
 
 
 def sync_incy() -> bool:
+    # INCY is kept exactly equal to upstream RoscomVPN. Unlike Happ, do not
+    # rewrite Name or other fields because INCY is sensitive to profile changes.
     upstream = get_json(INCY_UPSTREAM_JSON)
-    upstream["Name"] = TERX_NAME
 
     current_json = None
     if INCY_JSON.exists():
@@ -76,7 +75,7 @@ def sync_incy() -> bool:
         return False
 
     write_pretty_json(INCY_JSON, upstream)
-    print("Updated INCY profile from RoscomVPN upstream")
+    print("Updated INCY profile exactly from RoscomVPN upstream")
     return True
 
 

@@ -1,19 +1,51 @@
 # TerX Routing
 
-Routing policy for Happ clients used by TerX Proxy.
+Client-specific routing policies and Remnawave Subscription Response Rules for TerX.
 
-The policy is maintained here, while GeoIP/GeoSite databases are consumed from the upstream `hydraponique/roscomvpn-geoip` and `hydraponique/roscomvpn-geosite` projects.
+## Upstream geodata
 
-## Happ profile
+TerX uses `runetfreedom/russia-v2ray-rules-dat` as the source of Russian GeoIP/GeoSite data. The upstream project is rebuilt every 6 hours and provides categories such as `ru-blocked`, `ru-blocked-community`, `ru-whitelist`, `ru-available-only-inside`, `openai`, `youtube`, `telegram`, `discord` and `category-ads-all`.
 
-`HAPP/DEFAULT.JSON`
+## Happ
 
-Raw URL:
+Profile source: `HAPP/DEFAULT.JSON`.
 
-`https://raw.githubusercontent.com/iterentev69/terx-routing/main/HAPP/DEFAULT.JSON`
+Happ receives the profile through the Remnawave `routing` response header as `happ://routing/onadd/<base64>`. Happ does not use a remote routing-profile URL in this header, so the Happ profile uses stable upstream `release` URLs for GeoIP/GeoSite data.
 
-## Update model
+## INCY
 
-GitHub Actions checks the latest upstream GeoIP and GeoSite releases every 6 hours. If either release changes, the workflow updates the versioned jsDelivr URLs and `LastUpdated` in the Happ profile and commits the change.
+Profile source: `INCY/DEFAULT.JSON`.
 
-The TerX routing policy itself (`DirectSites`, `ProxySites`, `BlockSites`, DNS policy, etc.) is controlled in this repository and is not overwritten by upstream routing-policy changes.
+INCY receives an auto-updating routing profile through:
+
+`autorouting: incy://autorouting/onadd/https://raw.githubusercontent.com/iterentev69/terx-routing/main/INCY/DEFAULT.JSON`
+
+INCY periodically re-downloads the routing profile. The GitHub Action checks RunetFreedom every 6 hours and updates the versioned GeoIP/GeoSite release URLs in `INCY/DEFAULT.JSON` when a new upstream release appears.
+
+## Remnawave SRR
+
+Ready-to-import response rules are stored in:
+
+`SRR/response-rules.json`
+
+Current client policy:
+
+- Browser → BROWSER
+- Happ → XRAY_JSON + TerX routing header
+- INCY → XRAY_BASE64 + INCY autorouting header
+- Mihomo family → MIHOMO
+- Stash → STASH
+- Sing-box family → SINGBOX
+- legacy Clash → CLASH
+- unknown clients → XRAY_BASE64
+
+## TerX policy
+
+The policy is intentionally conservative:
+
+- private/local and services that require Russian access → DIRECT
+- Russian blocked resources and selected global services → PROXY
+- ads and Windows telemetry categories → BLOCK
+- unmatched traffic → PROXY
+
+The routing policy itself is maintained by TerX and is not overwritten by upstream projects.

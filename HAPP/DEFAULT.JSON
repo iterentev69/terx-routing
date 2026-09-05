@@ -1,7 +1,7 @@
 {
   "Name": "TerX Smart Routing",
   "GlobalProxy": "true",
-  "UseChunkFiles": "true",
+  "UseChunkFiles": "false",
   "RemoteDns": "8.8.8.8",
   "DomesticDns": "77.88.8.8",
   "RemoteDNSType": "DoH",
@@ -12,7 +12,7 @@
   "DomesticDNSIP": "77.88.8.8",
   "Geoipurl": "https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/release/geoip.dat",
   "Geositeurl": "https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/release/geosite.dat",
-  "LastUpdated": "1788611220",
+  "LastUpdated": "1788613732",
   "DnsHosts": {
     "lkfl2.nalog.ru": "213.24.64.175",
     "lknpd.nalog.ru": "213.24.64.181"

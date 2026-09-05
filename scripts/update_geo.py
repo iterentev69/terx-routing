@@ -4,7 +4,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG = ROOT / "HAPP" / "DEFAULT.JSON"
+CONFIG = ROOT / "INCY" / "DEFAULT.JSON"
 UPSTREAM = "runetfreedom/russia-v2ray-rules-dat"
 
 
@@ -54,7 +54,6 @@ if not changed:
     print(f"Already current: RunetFreedom={tag}")
     raise SystemExit(0)
 
-# Do not publish a profile that points at unavailable release assets.
 assert_url(new_geoip)
 assert_url(new_geosite)
 
@@ -66,4 +65,4 @@ with CONFIG.open("w", encoding="utf-8") as f:
     json.dump(config, f, ensure_ascii=False, indent=2)
     f.write("\n")
 
-print(f"Updated: RunetFreedom={tag}")
+print(f"Updated INCY profile: RunetFreedom={tag}")

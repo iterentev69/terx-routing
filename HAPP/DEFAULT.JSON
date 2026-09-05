@@ -10,9 +10,9 @@
   "DomesticDNSType": "DoH",
   "DomesticDNSDomain": "https://77.88.8.8/dns-query",
   "DomesticDNSIP": "77.88.8.8",
-  "Geoipurl": "https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/download/202609050749/geoip.dat",
-  "Geositeurl": "https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/download/202609050749/geosite.dat",
-  "LastUpdated": "1788596846",
+  "Geoipurl": "https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/release/geoip.dat",
+  "Geositeurl": "https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/release/geosite.dat",
+  "LastUpdated": "1788611220",
   "DnsHosts": {
     "lkfl2.nalog.ru": "213.24.64.175",
     "lknpd.nalog.ru": "213.24.64.181"
@@ -34,10 +34,10 @@
     "geosite:openai",
     "geosite:google",
     "geosite:google-play",
-    "geosite:github",
     "geosite:youtube",
     "geosite:telegram",
-    "geosite:discord"
+    "geosite:discord",
+    "geosite:github"
   ],
   "ProxyIp": [
     "geoip:ru-blocked",

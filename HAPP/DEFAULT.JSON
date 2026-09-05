@@ -1,7 +1,7 @@
 {
-  "Name": "TerX JSON",
+  "Name": "TerX Smart Routing",
   "GlobalProxy": "true",
-  "UseChunkFiles": "false",
+  "UseChunkFiles": "true",
   "RemoteDns": "8.8.8.8",
   "DomesticDns": "77.88.8.8",
   "RemoteDNSType": "DoH",
@@ -18,11 +18,37 @@
     "lknpd.nalog.ru": "213.24.64.181"
   },
   "RouteOrder": "block-proxy-direct",
-  "DirectSites": [],
-  "DirectIp": [],
-  "ProxySites": [],
+  "DirectSites": [
+    "geosite:private",
+    "geosite:category-ru",
+    "geosite:whitelist",
+    "geosite:microsoft",
+    "geosite:apple",
+    "geosite:epicgames",
+    "geosite:riot",
+    "geosite:escapefromtarkov",
+    "geosite:steam",
+    "geosite:twitch",
+    "geosite:pinterest",
+    "geosite:faceit"
+  ],
+  "DirectIp": [
+    "geoip:private",
+    "geoip:direct"
+  ],
+  "ProxySites": [
+    "geosite:google-play",
+    "geosite:github",
+    "geosite:twitch-ads",
+    "geosite:youtube",
+    "geosite:telegram"
+  ],
   "ProxyIp": [],
-  "BlockSites": [],
+  "BlockSites": [
+    "geosite:win-spy",
+    "geosite:torrent",
+    "geosite:category-ads"
+  ],
   "BlockIp": [],
   "DomainStrategy": "IPIfNonMatch",
   "FakeDNS": "false"

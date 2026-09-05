@@ -10,9 +10,9 @@
   "DomesticDNSType": "DoH",
   "DomesticDNSDomain": "https://77.88.8.8/dns-query",
   "DomesticDNSIP": "77.88.8.8",
-  "Geoipurl": "https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/download/202609050749/geoip.dat",
-  "Geositeurl": "https://github.com/runetfreedom/russia-v2ray-rules-dat/releases/download/202609050749/geosite.dat",
-  "LastUpdated": "1788611220",
+  "Geoipurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geoip/release/geoip.dat",
+  "Geositeurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geosite/release/geosite.dat",
+  "LastUpdated": "1788593909",
   "DnsHosts": {
     "lkfl2.nalog.ru": "213.24.64.175",
     "lknpd.nalog.ru": "213.24.64.181"
@@ -21,34 +21,33 @@
   "DirectSites": [
     "geosite:private",
     "geosite:category-ru",
-    "geosite:ru-available-only-inside",
+    "geosite:whitelist",
     "geosite:microsoft",
-    "geosite:apple"
+    "geosite:apple",
+    "geosite:epicgames",
+    "geosite:riot",
+    "geosite:escapefromtarkov",
+    "geosite:steam",
+    "geosite:twitch",
+    "geosite:pinterest",
+    "geosite:faceit"
   ],
   "DirectIp": [
     "geoip:private",
-    "geoip:ru-whitelist"
+    "geoip:direct"
   ],
   "ProxySites": [
-    "geosite:ru-blocked",
-    "geosite:openai",
-    "geosite:google",
     "geosite:google-play",
+    "geosite:github",
+    "geosite:twitch-ads",
     "geosite:youtube",
-    "geosite:telegram",
-    "geosite:discord",
-    "geosite:github"
+    "geosite:telegram"
   ],
-  "ProxyIp": [
-    "geoip:ru-blocked",
-    "geoip:ru-blocked-community",
-    "geoip:re-filter",
-    "geoip:google",
-    "geoip:telegram"
-  ],
+  "ProxyIp": [],
   "BlockSites": [
-    "geosite:category-ads-all",
-    "geosite:win-spy"
+    "geosite:win-spy",
+    "geosite:torrent",
+    "geosite:category-ads"
   ],
   "BlockIp": [],
   "DomainStrategy": "IPIfNonMatch",

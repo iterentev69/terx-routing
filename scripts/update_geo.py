@@ -10,7 +10,8 @@ INCY_JSON = ROOT / "INCY" / "DEFAULT.JSON"
 
 HAPP_UPSTREAM_JSON = "https://raw.githubusercontent.com/hydraponique/roscomvpn-routing/main/HAPP/DEFAULT.JSON"
 INCY_UPSTREAM_JSON = "https://raw.githubusercontent.com/hydraponique/roscomvpn-routing/main/INCY/DEFAULT.JSON"
-TERX_NAME = "TerX Smart Routing"
+HAPP_NAME = "TerX Smart Routing"
+INCY_NAME = "TerXSmartRouting"
 
 
 def get_json(url: str) -> dict:
@@ -39,7 +40,7 @@ def build_happ_deeplink(config: dict) -> str:
 
 def sync_happ() -> bool:
     upstream = get_json(HAPP_UPSTREAM_JSON)
-    upstream["Name"] = TERX_NAME
+    upstream["Name"] = HAPP_NAME
 
     current_json = None
     if HAPP_JSON.exists():
@@ -61,9 +62,8 @@ def sync_happ() -> bool:
 
 
 def sync_incy() -> bool:
-    # INCY is kept exactly equal to upstream RoscomVPN. Unlike Happ, do not
-    # rewrite Name or other fields because INCY is sensitive to profile changes.
     upstream = get_json(INCY_UPSTREAM_JSON)
+    upstream["Name"] = INCY_NAME
 
     current_json = None
     if INCY_JSON.exists():
@@ -75,7 +75,7 @@ def sync_incy() -> bool:
         return False
 
     write_pretty_json(INCY_JSON, upstream)
-    print("Updated INCY profile exactly from RoscomVPN upstream")
+    print("Updated INCY profile from RoscomVPN with no-space TerX branding")
     return True
 
 

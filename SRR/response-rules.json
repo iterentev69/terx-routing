@@ -18,7 +18,7 @@
     },
     {
       "name": "Happ Clients",
-      "description": "Xray JSON for Happ; routing header is managed separately by Remnawave Routing Updater",
+      "description": "Base64 subscription for Happ; routing header is managed separately by Remnawave Routing Updater",
       "enabled": true,
       "operator": "AND",
       "conditions": [
@@ -29,7 +29,7 @@
           "caseSensitive": false
         }
       ],
-      "responseType": "XRAY_JSON"
+      "responseType": "XRAY_BASE64"
     },
     {
       "name": "INCY Clients",

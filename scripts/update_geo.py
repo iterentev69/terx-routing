@@ -1,6 +1,5 @@
 import base64
 import json
-import time
 import urllib.request
 from pathlib import Path
 
@@ -10,7 +9,7 @@ HAPP_DEEPLINK = ROOT / "HAPP" / "DEFAULT.DEEPLINK"
 INCY_JSON = ROOT / "INCY" / "DEFAULT.JSON"
 
 HAPP_UPSTREAM_JSON = "https://raw.githubusercontent.com/hydraponique/roscomvpn-routing/main/HAPP/DEFAULT.JSON"
-RUNETFREEDOM_UPSTREAM = "runetfreedom/russia-v2ray-rules-dat"
+INCY_UPSTREAM_JSON = "https://raw.githubusercontent.com/hydraponique/roscomvpn-routing/main/INCY/DEFAULT.JSON"
 TERX_NAME = "TerX Smart Routing"
 
 
@@ -18,27 +17,12 @@ def get_json(url: str) -> dict:
     req = urllib.request.Request(
         url,
         headers={
-            "Accept": "application/vnd.github+json",
+            "Accept": "application/json",
             "User-Agent": "terx-routing-updater",
         },
     )
     with urllib.request.urlopen(req, timeout=30) as response:
         return json.load(response)
-
-
-def latest_release(repo: str) -> dict:
-    return get_json(f"https://api.github.com/repos/{repo}/releases/latest")
-
-
-def assert_url(url: str) -> None:
-    req = urllib.request.Request(
-        url,
-        method="HEAD",
-        headers={"User-Agent": "terx-routing-updater"},
-    )
-    with urllib.request.urlopen(req, timeout=30) as response:
-        if response.status != 200:
-            raise RuntimeError(f"URL validation failed ({response.status}): {url}")
 
 
 def write_pretty_json(path: Path, data: dict) -> None:
@@ -79,37 +63,20 @@ def sync_happ() -> bool:
 
 
 def sync_incy() -> bool:
-    with INCY_JSON.open("r", encoding="utf-8") as f:
-        config = json.load(f)
+    upstream = get_json(INCY_UPSTREAM_JSON)
+    upstream["Name"] = TERX_NAME
 
-    release = latest_release(RUNETFREEDOM_UPSTREAM)
-    tag = release["tag_name"]
-    assets = {asset["name"]: asset["browser_download_url"] for asset in release.get("assets", [])}
+    current_json = None
+    if INCY_JSON.exists():
+        with INCY_JSON.open("r", encoding="utf-8") as f:
+            current_json = json.load(f)
 
-    try:
-        new_geoip = assets["geoip.dat"]
-        new_geosite = assets["geosite.dat"]
-    except KeyError as exc:
-        raise RuntimeError(f"Required release asset is missing: {exc.args[0]}") from exc
-
-    changed = (
-        config.get("Geoipurl") != new_geoip
-        or config.get("Geositeurl") != new_geosite
-    )
-
-    if not changed:
-        print(f"INCY already current: RunetFreedom={tag}")
+    if current_json == upstream:
+        print("INCY already current with RoscomVPN upstream")
         return False
 
-    assert_url(new_geoip)
-    assert_url(new_geosite)
-
-    config["Geoipurl"] = new_geoip
-    config["Geositeurl"] = new_geosite
-    config["LastUpdated"] = str(int(time.time()))
-    write_pretty_json(INCY_JSON, config)
-
-    print(f"Updated INCY profile: RunetFreedom={tag}")
+    write_pretty_json(INCY_JSON, upstream)
+    print("Updated INCY profile from RoscomVPN upstream")
     return True
 
 

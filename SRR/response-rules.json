@@ -1,0 +1,144 @@
+{
+  "version": "1",
+  "rules": [
+    {
+      "name": "Browser Subscription",
+      "description": "System critical: do not delete or disable this rule.",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "accept",
+          "operator": "CONTAINS",
+          "value": "text/html",
+          "caseSensitive": true
+        }
+      ],
+      "responseType": "BROWSER"
+    },
+    {
+      "name": "Happ Clients",
+      "description": "Xray JSON with TerX Smart Routing for Happ",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^happ(?:/|$)",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_JSON",
+      "responseModifications": {
+        "applyHeadersToEnd": true,
+        "headers": [
+          {
+            "key": "routing",
+            "value": "happ://routing/onadd/ewogICJOYW1lIjogIlRlclggU21hcnQgUm91dGluZyIsCiAgIkdsb2JhbFByb3h5IjogInRydWUiLAogICJVc2VDaHVua0ZpbGVzIjogInRydWUiLAogICJSZW1vdGVEbnMiOiAiOC44LjguOCIsCiAgIkRvbWVzdGljRG5zIjogIjc3Ljg4LjguOCIsCiAgIlJlbW90ZUROU1R5cGUiOiAiRG9IIiwKICAiUmVtb3RlRE5TRG9tYWluIjogImh0dHBzOi8vOC44LjguOC9kbnMtcXVlcnkiLAogICJSZW1vdGVETlNJUCI6ICI4LjguOC44IiwKICAiRG9tZXN0aWNETlNUeXBlIjogIkRvSCIsCiAgIkRvbWVzdGljRE5TRG9tYWluIjogImh0dHBzOi8vNzcuODguOC44L2Rucy1xdWVyeSIsCiAgIkRvbWVzdGljRE5TSVAiOiAiNzcuODguOC44IiwKICAiR2VvaXB1cmwiOiAiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3J1bmV0ZnJlZWRvbS9ydXNzaWEtdjJyYXktcnVsZXMtZGF0L3JlbGVhc2UvZ2VvaXAuZGF0IiwKICAiR2Vvc2l0ZXVybCI6ICJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vcnVuZXRmcmVlZG9tL3J1c3NpYS12MnJheS1ydWxlcy1kYXQvcmVsZWFzZS9nZW9zaXRlLmRhdCIsCiAgIkxhc3RVcGRhdGVkIjogIjE3ODg2MTEyMjAiLAogICJEbnNIb3N0cyI6IHsKICAgICJsa2ZsMi5uYWxvZy5ydSI6ICIyMTMuMjQuNjQuMTc1IiwKICAgICJsa25wZC5uYWxvZy5ydSI6ICIyMTMuMjQuNjQuMTgxIgogIH0sCiAgIlJvdXRlT3JkZXIiOiAiYmxvY2stcHJveHktZGlyZWN0IiwKICAiRGlyZWN0U2l0ZXMiOiBbCiAgICAiZ2Vvc2l0ZTpwcml2YXRlIiwKICAgICJnZW9zaXRlOmNhdGVnb3J5LXJ1IiwKICAgICJnZW9zaXRlOnJ1LWF2YWlsYWJsZS1vbmx5LWluc2lkZSIsCiAgICAiZ2Vvc2l0ZTptaWNyb3NvZnQiLAogICAgImdlb3NpdGU6YXBwbGUiCiAgXSwKICAiRGlyZWN0SXAiOiBbCiAgICAiZ2VvaXA6cHJpdmF0ZSIsCiAgICAiZ2VvaXA6cnUtd2hpdGVsaXN0IgogIF0sCiAgIlByb3h5U2l0ZXMiOiBbCiAgICAiZ2Vvc2l0ZTpydS1ibG9ja2VkIiwKICAgICJnZW9zaXRlOm9wZW5haSIsCiAgICAiZ2Vvc2l0ZTpnb29nbGUiLAogICAgImdlb3NpdGU6Z29vZ2xlLXBsYXkiLAogICAgImdlb3NpdGU6eW91dHViZSIsCiAgICAiZ2Vvc2l0ZTp0ZWxlZ3JhbSIsCiAgICAiZ2Vvc2l0ZTpkaXNjb3JkIiwKICAgICJnZW9zaXRlOmdpdGh1YiIKICBdLAogICJQcm94eUlwIjogWwogICAgImdlb2lwOnJ1LWJsb2NrZWQiLAogICAgImdlb2lwOnJ1LWJsb2NrZWQtY29tbXVuaXR5IiwKICAgICJnZW9pcDpyZS1maWx0ZXIiLAogICAgImdlb2lwOmdvb2dsZSIsCiAgICAiZ2VvaXA6dGVsZWdyYW0iCiAgXSwKICAiQmxvY2tTaXRlcyI6IFsKICAgICJnZW9zaXRlOmNhdGVnb3J5LWFkcy1hbGwiLAogICAgImdlb3NpdGU6d2luLXNweSIKICBdLAogICJCbG9ja0lwIjogW10sCiAgIkRvbWFpblN0cmF0ZWd5IjogIklQSWZOb25NYXRjaCIsCiAgIkZha2VETlMiOiAiZmFsc2UiCn0="
+          },
+          {
+            "key": "x-terx-policy",
+            "value": "smart-routing-v1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "INCY Clients",
+      "description": "Base64 subscription with auto-updating TerX routing for INCY",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^incy(?:/|$)",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "XRAY_BASE64",
+      "responseModifications": {
+        "applyHeadersToEnd": true,
+        "headers": [
+          {
+            "key": "autorouting",
+            "value": "incy://autorouting/onadd/https://raw.githubusercontent.com/iterentev69/terx-routing/main/INCY/DEFAULT.JSON"
+          },
+          {
+            "key": "x-terx-policy",
+            "value": "smart-routing-v1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Mihomo Clients",
+      "description": "Response with generated YAML config (Mihomo Template)",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^(?:flclash|flowvy|murge|mihomo|prizrak-box|koala-clash|clash(?:-verge|-nyanpasu|x meta|[-.]?meta))",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "MIHOMO"
+    },
+    {
+      "name": "Stash (iOS, macOS)",
+      "description": "Response with generated YAML config (Stash Template)",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^stash",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "STASH"
+    },
+    {
+      "name": "Sing-box clients",
+      "description": "Response with generated JSON config (Singbox template)",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^(?:sfa|sfi|sfm|sft|karing|singbox)",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "SINGBOX"
+    },
+    {
+      "name": "Clash Core Clients",
+      "description": "Response with generated YAML config (Clash Template)",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [
+        {
+          "headerName": "user-agent",
+          "operator": "REGEX",
+          "value": "^clash",
+          "caseSensitive": false
+        }
+      ],
+      "responseType": "CLASH"
+    },
+    {
+      "name": "Fallback Base64",
+      "description": "System critical: do not delete or disable this rule.",
+      "enabled": true,
+      "operator": "AND",
+      "conditions": [],
+      "responseType": "XRAY_BASE64"
+    }
+  ]
+}

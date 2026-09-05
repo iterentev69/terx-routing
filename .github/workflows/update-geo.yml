@@ -1,4 +1,4 @@
-name: Update routing databases
+name: Update routing profiles
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-routing-databases
+  group: update-routing-profiles
   cancel-in-progress: false
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Update INCY GeoIP and GeoSite references
+      - name: Sync Happ and INCY profiles
         run: python scripts/update_geo.py
 
       - name: Validate routing JSON
@@ -33,16 +33,33 @@ jobs:
           python -m json.tool HAPP/DEFAULT.JSON > /dev/null
           python -m json.tool INCY/DEFAULT.JSON > /dev/null
 
+      - name: Validate Happ deeplink
+        run: |
+          python - <<'PY'
+          import base64, json
+          from pathlib import Path
+
+          text = Path('HAPP/DEFAULT.DEEPLINK').read_text().strip()
+          prefix = 'happ://routing/onadd/'
+          assert text.startswith(prefix), 'Invalid Happ deeplink prefix'
+          payload = text[len(prefix):]
+          decoded = json.loads(base64.b64decode(payload).decode('utf-8'))
+          source = json.loads(Path('HAPP/DEFAULT.JSON').read_text())
+          assert decoded == source, 'HAPP/DEFAULT.DEEPLINK is not generated from HAPP/DEFAULT.JSON'
+          assert decoded['RemoteDNSIP'] == '8.8.8.8', 'Unexpected RemoteDNSIP'
+          print('Happ deeplink validated')
+          PY
+
       - name: Commit changes
         shell: bash
         run: |
-          if git diff --quiet -- INCY/DEFAULT.JSON; then
+          if git diff --quiet -- HAPP/DEFAULT.JSON HAPP/DEFAULT.DEEPLINK INCY/DEFAULT.JSON; then
             echo "No upstream changes"
             exit 0
           fi
 
           git config user.name "TerX Routing Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add INCY/DEFAULT.JSON
-          git commit -m "chore: update INCY GeoIP and GeoSite releases"
+          git add HAPP/DEFAULT.JSON HAPP/DEFAULT.DEEPLINK INCY/DEFAULT.JSON
+          git commit -m "chore: sync routing profiles"
           git push

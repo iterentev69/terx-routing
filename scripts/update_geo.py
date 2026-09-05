@@ -5,14 +5,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "HAPP" / "DEFAULT.JSON"
-
-UPSTREAMS = {
-    "geoip": "hydraponique/roscomvpn-geoip",
-    "geosite": "hydraponique/roscomvpn-geosite",
-}
+UPSTREAM = "runetfreedom/russia-v2ray-rules-dat"
 
 
-def latest_tag(repo: str) -> str:
+def latest_release(repo: str) -> dict:
     url = f"https://api.github.com/repos/{repo}/releases/latest"
     req = urllib.request.Request(
         url,
@@ -22,8 +18,7 @@ def latest_tag(repo: str) -> str:
         },
     )
     with urllib.request.urlopen(req, timeout=30) as response:
-        data = json.load(response)
-    return data["tag_name"]
+        return json.load(response)
 
 
 def assert_url(url: str) -> None:
@@ -40,17 +35,15 @@ def assert_url(url: str) -> None:
 with CONFIG.open("r", encoding="utf-8") as f:
     config = json.load(f)
 
-geoip_tag = latest_tag(UPSTREAMS["geoip"])
-geosite_tag = latest_tag(UPSTREAMS["geosite"])
+release = latest_release(UPSTREAM)
+tag = release["tag_name"]
+assets = {asset["name"]: asset["browser_download_url"] for asset in release.get("assets", [])}
 
-new_geoip = (
-    "https://cdn.jsdelivr.net/gh/"
-    f"hydraponique/roscomvpn-geoip@{geoip_tag}/release/geoip.dat"
-)
-new_geosite = (
-    "https://cdn.jsdelivr.net/gh/"
-    f"hydraponique/roscomvpn-geosite@{geosite_tag}/release/geosite.dat"
-)
+try:
+    new_geoip = assets["geoip.dat"]
+    new_geosite = assets["geosite.dat"]
+except KeyError as exc:
+    raise RuntimeError(f"Required release asset is missing: {exc.args[0]}") from exc
 
 changed = (
     config.get("Geoipurl") != new_geoip
@@ -58,10 +51,10 @@ changed = (
 )
 
 if not changed:
-    print(f"Already current: GeoIP={geoip_tag}, GeoSite={geosite_tag}")
+    print(f"Already current: RunetFreedom={tag}")
     raise SystemExit(0)
 
-# Do not publish a profile that points at unavailable CDN assets.
+# Do not publish a profile that points at unavailable release assets.
 assert_url(new_geoip)
 assert_url(new_geosite)
 
@@ -73,4 +66,4 @@ with CONFIG.open("w", encoding="utf-8") as f:
     json.dump(config, f, ensure_ascii=False, indent=2)
     f.write("\n")
 
-print(f"Updated: GeoIP={geoip_tag}, GeoSite={geosite_tag}")
+print(f"Updated: RunetFreedom={tag}")

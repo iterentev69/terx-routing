@@ -43,9 +43,12 @@ jobs:
           prefix = 'happ://routing/onadd/'
           assert text.startswith(prefix), 'Invalid Happ deeplink prefix'
           payload = text[len(prefix):]
-          decoded = json.loads(base64.b64decode(payload).decode('utf-8'))
+          decoded_text = base64.b64decode(payload, validate=True).decode('utf-8')
+          decoded = json.loads(decoded_text)
           source = json.loads(Path('HAPP/DEFAULT.JSON').read_text())
           assert decoded == source, 'HAPP/DEFAULT.DEEPLINK is not generated from HAPP/DEFAULT.JSON'
+          compact = json.dumps(source, ensure_ascii=False, separators=(',', ':'))
+          assert decoded_text == compact, 'Happ deeplink payload must use compact JSON'
           assert decoded['RemoteDNSIP'] == '8.8.8.8', 'Unexpected RemoteDNSIP'
           print('Happ deeplink validated')
           PY

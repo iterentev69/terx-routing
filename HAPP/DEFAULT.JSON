@@ -1,7 +1,7 @@
 {
   "Name": "TerX Smart Routing",
   "GlobalProxy": "true",
-  "UseChunkFiles": "false",
+  "UseChunkFiles": "true",
   "RemoteDns": "8.8.8.8",
   "DomesticDns": "77.88.8.8",
   "RemoteDNSType": "DoH",
@@ -10,9 +10,9 @@
   "DomesticDNSType": "DoH",
   "DomesticDNSDomain": "https://77.88.8.8/dns-query",
   "DomesticDNSIP": "77.88.8.8",
-  "Geoipurl": "https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/release/geoip.dat",
-  "Geositeurl": "https://raw.githubusercontent.com/runetfreedom/russia-v2ray-rules-dat/release/geosite.dat",
-  "LastUpdated": "1788613732",
+  "Geoipurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geoip/release/geoip.dat",
+  "Geositeurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geosite/release/geosite.dat",
+  "LastUpdated": "1788615960",
   "DnsHosts": {
     "lkfl2.nalog.ru": "213.24.64.175",
     "lknpd.nalog.ru": "213.24.64.181"
@@ -21,34 +21,26 @@
   "DirectSites": [
     "geosite:private",
     "geosite:category-ru",
-    "geosite:ru-available-only-inside",
+    "geosite:whitelist",
     "geosite:microsoft",
     "geosite:apple"
   ],
   "DirectIp": [
     "geoip:private",
-    "geoip:ru-whitelist"
+    "geoip:direct"
   ],
   "ProxySites": [
-    "geosite:ru-blocked",
-    "geosite:openai",
-    "geosite:google",
+    "geosite:category-geoblock-ru",
     "geosite:google-play",
+    "geosite:github",
     "geosite:youtube",
-    "geosite:telegram",
-    "geosite:discord",
-    "geosite:github"
+    "geosite:telegram"
   ],
-  "ProxyIp": [
-    "geoip:ru-blocked",
-    "geoip:ru-blocked-community",
-    "geoip:re-filter",
-    "geoip:google",
-    "geoip:telegram"
-  ],
+  "ProxyIp": [],
   "BlockSites": [
-    "geosite:category-ads-all",
-    "geosite:win-spy"
+    "geosite:win-spy",
+    "geosite:torrent",
+    "geosite:category-ads"
   ],
   "BlockIp": [],
   "DomainStrategy": "IPIfNonMatch",

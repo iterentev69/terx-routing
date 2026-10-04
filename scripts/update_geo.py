@@ -14,6 +14,43 @@ HAPP_NAME = "TerX Smart Routing"
 INCY_NAME = "TerXSmartRouting"
 
 
+# TerX policy is applied after every upstream sync for both clients.
+TERX_POLICY_UPDATED_AT = 1791141769
+TERX_PROXY_SITES = (
+    "geosite:google-play",
+    "geosite:github",
+    "geosite:twitch-ads",
+    "geosite:youtube",
+    "geosite:telegram",
+)
+
+
+def apply_terx_policy(profile: dict) -> dict:
+    hosts = dict(profile.get("DnsHosts", {}))
+    for domain in ("lkfl2.nalog.ru", "lknpd.nalog.ru"):
+        hosts.pop(domain, None)
+    if hosts:
+        profile["DnsHosts"] = hosts
+    else:
+        profile.pop("DnsHosts", None)
+
+    profile["DirectSites"] = [
+        site for site in profile.get("DirectSites", [])
+        if site not in {"geosite:apple", "geosite:microsoft"}
+    ]
+    proxy_sites = list(profile.get("ProxySites", []))
+    for site in TERX_PROXY_SITES:
+        if site not in proxy_sites:
+            proxy_sites.append(site)
+    profile["ProxySites"] = proxy_sites
+    profile["RouteOrder"] = "block-proxy-direct"
+    # Publish policy changes without producing a new timestamp on every run.
+    profile["LastUpdated"] = str(max(
+        int(profile.get("LastUpdated", 0)), TERX_POLICY_UPDATED_AT
+    ))
+    return profile
+
+
 def get_json(url: str) -> dict:
     req = urllib.request.Request(
         url,
@@ -39,7 +76,7 @@ def build_happ_deeplink(config: dict) -> str:
 
 
 def sync_happ() -> bool:
-    upstream = get_json(HAPP_UPSTREAM_JSON)
+    upstream = apply_terx_policy(get_json(HAPP_UPSTREAM_JSON))
     upstream["Name"] = HAPP_NAME
 
     current_json = None
@@ -62,7 +99,7 @@ def sync_happ() -> bool:
 
 
 def sync_incy() -> bool:
-    upstream = get_json(INCY_UPSTREAM_JSON)
+    upstream = apply_terx_policy(get_json(INCY_UPSTREAM_JSON))
     upstream["Name"] = INCY_NAME
 
     current_json = None
